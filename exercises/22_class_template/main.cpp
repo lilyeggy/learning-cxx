@@ -8,14 +8,13 @@ struct Tensor4D {
     T *data;
 
     Tensor4D(unsigned int const shape_[4], T const *data_) {
-        unsigned int size = 1;
-        // TODO: 填入正确的 shape 并计算 size
-        for (int i = 0; i < 4;i++){
-            shape[i] = shape_[i];
-            size *= shape_[i];
-        }
-        data = new T[size];
-        std::memcpy(data, data_, size * sizeof(T));
+    unsigned int size = 1;
+    for (int i = 0; i < 4; i++) {
+        shape[i] = shape_[i];
+        size *= shape[i];
+    }
+    data = new T[size];
+    std::memcpy(data, data_, size * sizeof(T));
     }
     ~Tensor4D() {
         delete[] data;
@@ -31,7 +30,6 @@ struct Tensor4D {
     // 例如，`this` 形状为 `[1, 2, 3, 4]`，`others` 形状为 `[1, 2, 1, 4]`，
     // 则 `this` 与 `others` 相加时，3 个形状为 `[1, 2, 1, 4]` 的子张量各自与 `others` 对应项相加。
     Tensor4D &operator+=(Tensor4D const &others) {
-        // TODO: 实现单向广播的加法
     unsigned int total_size = 1;
     for (int i = 0; i < 4; ++i) {
         if (others.shape[i] != 1 && others.shape[i] != this->shape[i]) {
@@ -39,29 +37,24 @@ struct Tensor4D {
         }
         total_size *= shape[i];
     }
-
     for (unsigned int idx = 0; idx < total_size; ++idx) {
-        unsigned int this_index[4], others_index[4], stride = 1;
+        unsigned int this_index[4], others_index[4];
         unsigned int temp = idx;
-
-        // 计算当前索引在4维空间中的坐标
         for (int i = 3; i >= 0; --i) {
             this_index[i] = temp % shape[i];
-            others_index[i] = (others.shape[i] == 1) ? 0 : this_index[i];  // 广播规则
             temp /= shape[i];
         }
-
-        // 计算 others 在一维数组中的偏移量
+        for (int i = 3; i >= 0; --i) {
+            others_index[i] = (others.shape[i] == 1) ? 0 : this_index[i];
+        }
         unsigned int others_offset = 0, stride_others = 1;
         for (int i = 3; i >= 0; --i) {
             others_offset += others_index[i] * stride_others;
             stride_others *= others.shape[i];
         }
-
-        // 执行加法
         data[idx] += others.data[others_offset];
     }
-        return *this;
+    return *this;
     }
 };
 
