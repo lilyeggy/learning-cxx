@@ -16,10 +16,9 @@ public:
     }
 
     // TODO: 实现复制构造器
-    DynFibonacci(DynFibonacci const &other) {
-        cache = new size_t[cached];
-        std::copy(other.cache,other.cache + cached,cache);
-    };
+    DynFibonacci(const DynFibonacci& other) : cache(new size_t[other.cached]), cached(other.cached) {
+        std::copy(other.cache, other.cache + other.cached, cache);
+    }
 
 
     // TODO: 实现析构器，释放缓存空间
@@ -29,10 +28,11 @@ public:
 
     // TODO: 实现正确的缓存优化斐波那契计算
     size_t get(int i) {
-        if (i > cached){
-        for (int cached = 2; i > cached; ++cached) {
-            cache[cached] = cache[cached - 1] + cache[cached - 2];
+        if (i >= cached){
+        for (int j = cached; i >= j; ++j) {
+            cache[j] = cache[j - 1] + cache[j - 2];
         }
+        cached = i + 1;
         }
         return cache[i];
     }
@@ -46,6 +46,7 @@ public:
             return cache[i];
         }
         ASSERT(false, "i out of range");
+        return 0;
     }
 };
 
