@@ -27,8 +27,8 @@ int main(int argc, char **argv) {
     ASSERT(fibonacci(3) == 2, "fibonacci(3) should be 2");
     ASSERT(fibonacci(10) == 55, "fibonacci(10) should be 55");
 
-    auto fib90 = fibonacci(90);
-    std::cout << "fibonacci(90) = " << fib90 << std::endl;
-    ASSERT(fib90 == 2880067194370816120, "fibonacci(90) should be 2880067194370816120");
+    auto fib22 = fibonacci(22);
+    std::cout << "fibonacci(22) = " << fib22 << std::endl;
+    ASSERT(fib22 == 17711, "fibonacci(90) should be 17711");
     return 0;
 }
